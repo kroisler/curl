@@ -1,0 +1,1630 @@
+{
+        "firewall": {
+                "all-ping": "enable",
+                "broadcast-ping": "disable",
+                "group": {
+                        "address-group": {
+                                "authorized_guests": {
+                                        "description": "authorized guests MAC addresses"
+                                },
+                                "guest_allow_addresses": {
+                                        "description": "allow addresses for guests"
+                                },
+                                "guest_allow_dns_servers": {
+                                        "description": "allow dns servers for guests"
+                                },
+                                "guest_portal_address": {
+                                        "description": "guest portal address"
+                                },
+                                "guest_restricted_addresses": {
+                                        "address": [
+                                                "192.168.0.0/16",
+                                                "172.16.0.0/12",
+                                                "10.0.0.0/8"
+                                        ],
+                                        "description": "restricted addresses for guests"
+                                },
+                                "unifi_controller_addresses": {
+                                        "address": [
+                                                "192.168.1.6"
+                                        ]
+                                }
+                        },
+                        "ipv6-network-group": {
+                                "corporate_networkv6": {
+                                        "description": "IPv6 corporate subnets"
+                                },
+                                "guest_networkv6": {
+                                        "description": "IPv6 guest subnets"
+                                }
+                        },
+                        "network-group": {
+                                "captive_portal_subnets": {
+                                        "description": "captive portal subnets"
+                                },
+                                "corporate_network": {
+                                        "description": "corporate subnets",
+                                        "network": [
+                                                "192.168.1.0/24",
+                                                "192.168.8.0/24",
+                                                "192.168.6.0/24",
+                                                "192.168.22.0/24",
+                                                "192.168.3.0/24",
+                                                "192.168.4.0/24",
+                                                "192.168.5.0/24",
+                                                "192.168.9.0/24",
+                                                "192.168.80.0/28"
+                                        ]
+                                },
+                                "guest_allow_subnets": {
+                                        "description": "allow subnets for guests"
+                                },
+                                "guest_network": {
+                                        "description": "guest subnets"
+                                },
+                                "guest_restricted_subnets": {
+                                        "description": "restricted subnets for guests"
+                                },
+                                "remote_client_vpn_network": {
+                                        "description": "remote client VPN subnets",
+                                        "network": [
+                                                "192.168.2.0/24",
+                                                "1.0.0.0/30"
+                                        ]
+                                },
+                                "remote_site_vpn_network": {
+                                        "description": "remote site VPN subnets"
+                                },
+                                "remote_user_vpn_network": {
+                                        "description": "Remote User VPN subnets",
+                                        "network": [
+                                                "192.168.99.0/24"
+                                        ]
+                                }
+                        },
+                        "port-group": {
+                                "guest_portal_ports": {
+                                        "description": "guest portal ports"
+                                },
+                                "guest_portal_redirector_ports": {
+                                        "description": "guest portal redirector ports",
+                                        "port": [
+                                                "39080",
+                                                "39443"
+                                        ]
+                                },
+                                "unifi_controller_ports-tcp": {
+                                        "description": "unifi tcp ports",
+                                        "port": [
+                                                "8080"
+                                        ]
+                                },
+                                "unifi_controller_ports-udp": {
+                                        "description": "unifi udp ports",
+                                        "port": [
+                                                "3478"
+                                        ]
+                                }
+                        }
+                },
+                "ip-src-route": "disable",
+                "ipv6-name": {
+                        "AUTHORIZED_GUESTSv6": {
+                                "default-action": "drop",
+                                "description": "authorization check packets from guest network"
+                        },
+                        "GUESTv6_IN": {
+                                "default-action": "accept",
+                                "description": "packets from guest network",
+                                "rule": {
+                                        "3001": {
+                                                "action": "drop",
+                                                "description": "drop packets to intranet",
+                                                "destination": {
+                                                        "group": {
+                                                                "ipv6-network-group": "corporate_networkv6"
+                                                        }
+                                                }
+                                        }
+                                }
+                        },
+                        "GUESTv6_LOCAL": {
+                                "default-action": "drop",
+                                "description": "packets from guest network to gateway",
+                                "rule": {
+                                        "3001": {
+                                                "action": "accept",
+                                                "description": "allow DNS",
+                                                "destination": {
+                                                        "port": "53"
+                                                },
+                                                "protocol": "udp"
+                                        },
+                                        "3002": {
+                                                "action": "accept",
+                                                "description": "allow ICMP",
+                                                "protocol": "icmp"
+                                        }
+                                }
+                        },
+                        "GUESTv6_OUT": {
+                                "default-action": "accept",
+                                "description": "packets forward to guest network"
+                        },
+                        "LANv6_IN": {
+                                "default-action": "accept",
+                                "description": "packets from intranet"
+                        },
+                        "LANv6_LOCAL": {
+                                "default-action": "accept",
+                                "description": "packets from intranet to gateway"
+                        },
+                        "LANv6_OUT": {
+                                "default-action": "accept",
+                                "description": "packets forward to intranet"
+                        },
+                        "WANv6_IN": {
+                                "default-action": "drop",
+                                "description": "packets from internet to intranet",
+                                "rule": {
+                                        "3001": {
+                                                "action": "accept",
+                                                "description": "allow established/related sessions",
+                                                "state": {
+                                                        "established": "enable",
+                                                        "invalid": "disable",
+                                                        "new": "disable",
+                                                        "related": "enable"
+                                                }
+                                        },
+                                        "3002": {
+                                                "action": "drop",
+                                                "description": "drop invalid state",
+                                                "state": {
+                                                        "established": "disable",
+                                                        "invalid": "enable",
+                                                        "new": "disable",
+                                                        "related": "disable"
+                                                }
+                                        }
+                                }
+                        },
+                        "WANv6_LOCAL": {
+                                "default-action": "drop",
+                                "description": "packets from internet to gateway",
+                                "rule": {
+                                        "3001": {
+                                                "action": "accept",
+                                                "description": "Allow neighbor advertisements",
+                                                "icmpv6": {
+                                                        "type": "neighbor-advertisement"
+                                                },
+                                                "protocol": "ipv6-icmp"
+                                        },
+                                        "3002": {
+                                                "action": "accept",
+                                                "description": "Allow neighbor solicitation",
+                                                "icmpv6": {
+                                                        "type": "neighbor-solicitation"
+                                                },
+                                                "protocol": "ipv6-icmp"
+                                        },
+                                        "3003": {
+                                                "action": "accept",
+                                                "description": "allow established/related sessions",
+                                                "state": {
+                                                        "established": "enable",
+                                                        "invalid": "disable",
+                                                        "new": "disable",
+                                                        "related": "enable"
+                                                }
+                                        },
+                                        "3004": {
+                                                "action": "drop",
+                                                "description": "drop invalid state",
+                                                "state": {
+                                                        "established": "disable",
+                                                        "invalid": "enable",
+                                                        "new": "disable",
+                                                        "related": "disable"
+                                                }
+                                        }
+                                }
+                        },
+                        "WANv6_OUT": {
+                                "default-action": "accept",
+                                "description": "packets to internet"
+                        }
+                },
+                "ipv6-receive-redirects": "disable",
+                "ipv6-src-route": "disable",
+                "log-martians": "enable",
+                "modify": {
+                        "VPN_Gateway": {
+                                "rule": {
+                                        "3000": {
+                                                "action": "modify",
+                                                "modify": {
+                                                        "table": "1"
+                                                },
+                                                "protocol": "all",
+                                                "source": {
+                                                        "address": "192.168.6.0/24"
+                                                }
+                                        }
+                                }
+                        }
+                },
+                "name": {
+                        "AUTHORIZED_GUESTS": {
+                                "default-action": "drop",
+                                "description": "authorization check packets from guest network"
+                        },
+                        "GUEST_IN": {
+                                "default-action": "accept",
+                                "description": "packets from guest network",
+                                "rule": {
+                                        "3001": {
+                                                "action": "accept",
+                                                "description": "allow DNS packets to external name servers",
+                                                "destination": {
+                                                        "port": "53"
+                                                },
+                                                "protocol": "tcp_udp"
+                                        },
+                                        "3002": {
+                                                "action": "accept",
+                                                "description": "allow packets to captive portal",
+                                                "destination": {
+                                                        "group": {
+                                                                "network-group": "captive_portal_subnets"
+                                                        },
+                                                        "port": "443"
+                                                },
+                                                "protocol": "tcp"
+                                        },
+                                        "3003": {
+                                                "action": "accept",
+                                                "description": "allow packets to allow subnets",
+                                                "destination": {
+                                                        "group": {
+                                                                "address-group": "guest_allow_addresses"
+                                                        }
+                                                }
+                                        },
+                                        "3004": {
+                                                "action": "drop",
+                                                "description": "drop packets to restricted subnets",
+                                                "destination": {
+                                                        "group": {
+                                                                "address-group": "guest_restricted_addresses"
+                                                        }
+                                                }
+                                        },
+                                        "3005": {
+                                                "action": "drop",
+                                                "description": "drop packets to intranet",
+                                                "destination": {
+                                                        "group": {
+                                                                "network-group": "corporate_network"
+                                                        }
+                                                }
+                                        },
+                                        "3006": {
+                                                "action": "drop",
+                                                "description": "drop packets to remote user",
+                                                "destination": {
+                                                        "group": {
+                                                                "network-group": "remote_user_vpn_network"
+                                                        }
+                                                }
+                                        },
+                                        "3007": {
+                                                "action": "drop",
+                                                "description": "authorized guests white list",
+                                                "destination": {
+                                                        "group": {
+                                                                "address-group": "authorized_guests"
+                                                        }
+                                                }
+                                        }
+                                }
+                        },
+                        "GUEST_LOCAL": {
+                                "default-action": "drop",
+                                "description": "packets from guest network to gateway",
+                                "rule": {
+                                        "3001": {
+                                                "action": "accept",
+                                                "description": "allow DNS",
+                                                "destination": {
+                                                        "port": "53"
+                                                },
+                                                "protocol": "tcp_udp"
+                                        },
+                                        "3002": {
+                                                "action": "accept",
+                                                "description": "allow ICMP",
+                                                "protocol": "icmp"
+                                        },
+                                        "3003": {
+                                                "action": "accept",
+                                                "description": "allow to DHCP server",
+                                                "destination": {
+                                                        "port": "67"
+                                                },
+                                                "protocol": "udp",
+                                                "source": {
+                                                        "port": "68"
+                                                }
+                                        },
+                                        "3004": {
+                                                "action": "accept",
+                                                "description": "allow to RADIUS authentication",
+                                                "destination": {
+                                                        "port": "1812"
+                                                },
+                                                "protocol": "udp"
+                                        },
+                                        "3005": {
+                                                "action": "accept",
+                                                "description": "allow to RADIUS accounting",
+                                                "destination": {
+                                                        "port": "1813"
+                                                },
+                                                "protocol": "udp"
+                                        }
+                                }
+                        },
+                        "GUEST_OUT": {
+                                "default-action": "accept",
+                                "description": "packets forward to guest network"
+                        },
+                        "LAN_IN": {
+                                "default-action": "accept",
+                                "description": "packets from intranet",
+                                "rule": {
+                                        "6001": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.1.0/24",
+                                                "source": {
+                                                        "address": "192.168.1.0/24"
+                                                }
+                                        },
+                                        "6002": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.8.0/24",
+                                                "source": {
+                                                        "address": "192.168.8.0/24"
+                                                }
+                                        },
+                                        "6003": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.6.0/24",
+                                                "source": {
+                                                        "address": "192.168.6.0/24"
+                                                }
+                                        },
+                                        "6004": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.22.0/24",
+                                                "source": {
+                                                        "address": "192.168.22.0/24"
+                                                }
+                                        },
+                                        "6005": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.3.0/24",
+                                                "source": {
+                                                        "address": "192.168.3.0/24"
+                                                }
+                                        },
+                                        "6006": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.4.0/24",
+                                                "source": {
+                                                        "address": "192.168.4.0/24"
+                                                }
+                                        },
+                                        "6007": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.5.0/24",
+                                                "source": {
+                                                        "address": "192.168.5.0/24"
+                                                }
+                                        },
+                                        "6008": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.9.0/24",
+                                                "source": {
+                                                        "address": "192.168.9.0/24"
+                                                }
+                                        },
+                                        "6009": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.80.0/28",
+                                                "source": {
+                                                        "address": "192.168.80.0/28"
+                                                }
+                                        }
+                                }
+                        },
+                        "LAN_LOCAL": {
+                                "default-action": "accept",
+                                "description": "packets from intranet to gateway"
+                        },
+                        "LAN_OUT": {
+                                "default-action": "accept",
+                                "description": "packets forward to intranet",
+                                "rule": {
+                                        "6001": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.1.0/24",
+                                                "destination": {
+                                                        "address": "192.168.1.0/24"
+                                                }
+                                        },
+                                        "6002": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.8.0/24",
+                                                "destination": {
+                                                        "address": "192.168.8.0/24"
+                                                }
+                                        },
+                                        "6003": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.6.0/24",
+                                                "destination": {
+                                                        "address": "192.168.6.0/24"
+                                                }
+                                        },
+                                        "6004": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.22.0/24",
+                                                "destination": {
+                                                        "address": "192.168.22.0/24"
+                                                }
+                                        },
+                                        "6005": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.3.0/24",
+                                                "destination": {
+                                                        "address": "192.168.3.0/24"
+                                                }
+                                        },
+                                        "6006": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.4.0/24",
+                                                "destination": {
+                                                        "address": "192.168.4.0/24"
+                                                }
+                                        },
+                                        "6007": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.5.0/24",
+                                                "destination": {
+                                                        "address": "192.168.5.0/24"
+                                                }
+                                        },
+                                        "6008": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.9.0/24",
+                                                "destination": {
+                                                        "address": "192.168.9.0/24"
+                                                }
+                                        },
+                                        "6009": {
+                                                "action": "accept",
+                                                "description": "accounting defined network 192.168.80.0/28",
+                                                "destination": {
+                                                        "address": "192.168.80.0/28"
+                                                }
+                                        }
+                                }
+                        },
+                        "WAN_IN": {
+                                "default-action": "drop",
+                                "description": "packets from internet to intranet",
+                                "rule": {
+                                        "3001": {
+                                                "action": "accept",
+                                                "description": "allow established/related sessions",
+                                                "state": {
+                                                        "established": "enable",
+                                                        "invalid": "disable",
+                                                        "new": "disable",
+                                                        "related": "enable"
+                                                }
+                                        },
+                                        "3002": {
+                                                "action": "drop",
+                                                "description": "drop invalid state",
+                                                "state": {
+                                                        "established": "disable",
+                                                        "invalid": "enable",
+                                                        "new": "disable",
+                                                        "related": "disable"
+                                                }
+                                        },
+                                        "3003": {
+                                                "action": "accept",
+                                                "description": "PortForward [Proxy]",
+                                                "destination": {
+                                                        "address": "192.168.1.9",
+                                                        "port": "443"
+                                                },
+                                                "protocol": "tcp_udp"
+                                        },
+                                        "3004": {
+                                                "action": "accept",
+                                                "description": "PortForward [Proxy_80]",
+                                                "destination": {
+                                                        "address": "192.168.1.9",
+                                                        "port": "80"
+                                                },
+                                                "protocol": "tcp_udp"
+                                        },
+                                        "3005": {
+                                                "action": "accept",
+                                                "description": "PortForward [RDP_Laptop]",
+                                                "destination": {
+                                                        "address": "192.168.1.18",
+                                                        "port": "3389"
+                                                },
+                                                "protocol": "tcp_udp"
+                                        },
+                                        "3006": {
+                                                "action": "accept",
+                                                "description": "PortForward [SSH]",
+                                                "destination": {
+                                                        "address": "192.168.6.7",
+                                                        "port": "22"
+                                                },
+                                                "protocol": "tcp_udp"
+                                        },
+                                        "3007": {
+                                                "action": "accept",
+                                                "description": "PortForward [TV_Stream]",
+                                                "destination": {
+                                                        "address": "192.168.8.10",
+                                                        "port": "8001"
+                                                },
+                                                "protocol": "tcp_udp"
+                                        }
+                                }
+                        },
+                        "WAN_LOCAL": {
+                                "default-action": "drop",
+                                "description": "packets from internet to gateway",
+                                "rule": {
+                                        "3001": {
+                                                "action": "accept",
+                                                "description": "allow established/related sessions",
+                                                "state": {
+                                                        "established": "enable",
+                                                        "invalid": "disable",
+                                                        "new": "disable",
+                                                        "related": "enable"
+                                                }
+                                        },
+                                        "3002": {
+                                                "action": "drop",
+                                                "description": "drop invalid state",
+                                                "state": {
+                                                        "established": "disable",
+                                                        "invalid": "enable",
+                                                        "new": "disable",
+                                                        "related": "disable"
+                                                }
+                                        },
+                                        "3003": {
+                                                "action": "accept",
+                                                "description": "allow L2TP ISAKMP",
+                                                "destination": {
+                                                        "port": "500"
+                                                },
+                                                "protocol": "udp"
+                                        },
+                                        "3004": {
+                                                "action": "accept",
+                                                "description": "allow L2TP NAT-T",
+                                                "destination": {
+                                                        "port": "4500"
+                                                },
+                                                "protocol": "udp"
+                                        },
+                                        "3005": {
+                                                "action": "accept",
+                                                "description": "allow L2TP ESP",
+                                                "protocol": "esp"
+                                        },
+                                        "3006": {
+                                                "action": "accept",
+                                                "description": "allow L2TP",
+                                                "destination": {
+                                                        "port": "1701"
+                                                },
+                                                "ipsec": {
+                                                        "match-ipsec": "''"
+                                                },
+                                                "protocol": "udp"
+                                        }
+                                }
+                        },
+                        "WAN_OUT": {
+                                "default-action": "accept",
+                                "description": "packets to internet"
+                        }
+                },
+                "options": {
+                        "mss-clamp": {
+                                "interface-type": [
+                                        "pppoe",
+                                        "pptp",
+                                        "vti"
+                                ],
+                                "mss": "1452"
+                        },
+                        "mss-clamp6": {
+                                "interface-type": [
+                                        "pppoe",
+                                        "pptp"
+                                ],
+                                "mss": "1432"
+                        }
+                },
+                "receive-redirects": "disable",
+                "send-redirects": "enable",
+                "source-validation": "strict",
+                "syn-cookies": "enable"
+        },
+        "interfaces": {
+                "ethernet": {
+                        "eth0": {
+                                "description": "WAN",
+                                "duplex": "auto",
+                                "speed": "auto",
+                                "vif": {
+                                        "7": {
+                                                "description": "WAN",
+                                                "firewall": {
+                                                        "in": {
+                                                                "ipv6-name": "WANv6_IN",
+                                                                "name": "WAN_IN"
+                                                        },
+                                                        "local": {
+                                                                "ipv6-name": "WANv6_LOCAL",
+                                                                "name": "WAN_LOCAL"
+                                                        },
+                                                        "out": {
+                                                                "ipv6-name": "WANv6_OUT",
+                                                                "name": "WAN_OUT"
+                                                        }
+                                                },
+                                                "pppoe": {
+                                                        "2": {
+                                                                "default-route": "none",
+                                                                "firewall": {
+                                                                        "in": {
+                                                                                "ipv6-name": "WANv6_IN",
+                                                                                "name": "WAN_IN"
+                                                                        },
+                                                                        "local": {
+                                                                                "ipv6-name": "WANv6_LOCAL",
+                                                                                "name": "WAN_LOCAL"
+                                                                        },
+                                                                        "out": {
+                                                                                "ipv6-name": "WANv6_OUT",
+                                                                                "name": "WAN_OUT"
+                                                                        }
+                                                                },
+                                                                "mtu": "1492",
+                                                                "name-server": "none",
+                                                                "password": "90042140",
+                                                                "user-id": "0024108643655510095904400001@t-online.de"
+                                                        }
+                                                }
+                                        }
+                                }
+                        },
+                        "eth1": {
+                                "address": [
+                                        "192.168.1.1/24"
+                                ],
+                                "description": "LAN",
+                                "duplex": "auto",
+                                "firewall": {
+                                        "in": {
+                                                "ipv6-name": "LANv6_IN",
+                                                "name": "LAN_IN"
+                                        },
+                                        "local": {
+                                                "ipv6-name": "LANv6_LOCAL",
+                                                "name": "LAN_LOCAL"
+                                        },
+                                        "out": {
+                                                "ipv6-name": "LANv6_OUT",
+                                                "name": "LAN_OUT"
+                                        }
+                                },
+                                "speed": "auto",
+                                "vif": {
+                                        "2": {
+                                                "address": [
+                                                        "192.168.22.1/24"
+                                                ],
+                                                "firewall": {
+                                                        "in": {
+                                                                "ipv6-name": "LANv6_IN",
+                                                                "name": "LAN_IN"
+                                                        },
+                                                        "local": {
+                                                                "ipv6-name": "LANv6_LOCAL",
+                                                                "name": "LAN_LOCAL"
+                                                        },
+                                                        "out": {
+                                                                "ipv6-name": "LANv6_OUT",
+                                                                "name": "LAN_OUT"
+                                                        }
+                                                }
+                                        },
+                                        "3": {
+                                                "address": [
+                                                        "192.168.3.1/24"
+                                                ],
+                                                "firewall": {
+                                                        "in": {
+                                                                "ipv6-name": "LANv6_IN",
+                                                                "name": "LAN_IN"
+                                                        },
+                                                        "local": {
+                                                                "ipv6-name": "LANv6_LOCAL",
+                                                                "name": "LAN_LOCAL"
+                                                        },
+                                                        "out": {
+                                                                "ipv6-name": "LANv6_OUT",
+                                                                "name": "LAN_OUT"
+                                                        }
+                                                }
+                                        },
+                                        "4": {
+                                                "address": [
+                                                        "192.168.4.1/24"
+                                                ],
+                                                "firewall": {
+                                                        "in": {
+                                                                "ipv6-name": "LANv6_IN",
+                                                                "name": "LAN_IN"
+                                                        },
+                                                        "local": {
+                                                                "ipv6-name": "LANv6_LOCAL",
+                                                                "name": "LAN_LOCAL"
+                                                        },
+                                                        "out": {
+                                                                "ipv6-name": "LANv6_OUT",
+                                                                "name": "LAN_OUT"
+                                                        }
+                                                }
+                                        },
+                                        "5": {
+                                                "address": [
+                                                        "192.168.5.1/24"
+                                                ],
+                                                "firewall": {
+                                                        "in": {
+                                                                "ipv6-name": "LANv6_IN",
+                                                                "name": "LAN_IN"
+                                                        },
+                                                        "local": {
+                                                                "ipv6-name": "LANv6_LOCAL",
+                                                                "name": "LAN_LOCAL"
+                                                        },
+                                                        "out": {
+                                                                "ipv6-name": "LANv6_OUT",
+                                                                "name": "LAN_OUT"
+                                                        }
+                                                }
+                                        },
+                                        "6": {
+                                                "address": [
+                                                        "192.168.6.1/24"
+                                                ],
+                                                "firewall": {
+                                                        "in": {
+                                                                "ipv6-name": "LANv6_IN",
+                                                                "modify": "VPN_Gateway",
+                                                                "name": "LAN_IN"
+                                                        },
+                                                        "local": {
+                                                                "ipv6-name": "LANv6_LOCAL",
+                                                                "name": "LAN_LOCAL"
+                                                        },
+                                                        "out": {
+                                                                "ipv6-name": "LANv6_OUT",
+                                                                "name": "LAN_OUT"
+                                                        }
+                                                }
+                                        },
+                                        "8": {
+                                                "address": [
+                                                        "192.168.8.1/24"
+                                                ],
+                                                "firewall": {
+                                                        "in": {
+                                                                "ipv6-name": "LANv6_IN",
+                                                                "name": "LAN_IN"
+                                                        },
+                                                        "local": {
+                                                                "ipv6-name": "LANv6_LOCAL",
+                                                                "name": "LAN_LOCAL"
+                                                        },
+                                                        "out": {
+                                                                "ipv6-name": "LANv6_OUT",
+                                                                "name": "LAN_OUT"
+                                                        }
+                                                }
+                                        },
+                                        "80": {
+                                                "address": [
+                                                        "192.168.80.1/28"
+                                                ],
+                                                "firewall": {
+                                                        "in": {
+                                                                "ipv6-name": "LANv6_IN",
+                                                                "name": "LAN_IN"
+                                                        },
+                                                        "local": {
+                                                                "ipv6-name": "LANv6_LOCAL",
+                                                                "name": "LAN_LOCAL"
+                                                        },
+                                                        "out": {
+                                                                "ipv6-name": "LANv6_OUT",
+                                                                "name": "LAN_OUT"
+                                                        }
+                                                }
+                                        },
+                                        "9": {
+                                                "address": [
+                                                        "192.168.9.1/24"
+                                                ],
+                                                "firewall": {
+                                                        "in": {
+                                                                "ipv6-name": "LANv6_IN",
+                                                                "name": "LAN_IN"
+                                                        },
+                                                        "local": {
+                                                                "ipv6-name": "LANv6_LOCAL",
+                                                                "name": "LAN_LOCAL"
+                                                        },
+                                                        "out": {
+                                                                "ipv6-name": "LANv6_OUT",
+                                                                "name": "LAN_OUT"
+                                                        }
+                                                }
+                                        }
+                                }
+                        },
+                        "eth2": {
+                                "disable": "''",
+                                "duplex": "auto",
+                                "speed": "auto"
+                        }
+                },
+                "loopback": {
+                        "lo": "''"
+                },
+                "pptp-client": {
+                        "pptpc0": {
+                                "default-route": "none",
+                                "description": "PureVPN",
+                                "firewall": {
+                                        "in": {
+                                                "name": "WAN_IN"
+                                        },
+                                        "local": {
+                                                "name": "WAN_LOCAL"
+                                        },
+                                        "out": {
+                                                "name": "WAN_OUT"
+                                        }
+                                },
+                                "mtu": "1500",
+                                "name-server": "auto",
+                                "password": "Anker310597!",
+                                "require-mppe": "''",
+                                "server-ip": "dazn-de1.pointtoserver.com",
+                                "user-id": "purevpn0d9244875"
+                        },
+                        "pptpc1": {
+                                "default-route": "none",
+                                "description": "VPN_Waffenried",
+                                "firewall": {
+                                        "in": {
+                                                "name": "WAN_IN"
+                                        },
+                                        "local": {
+                                                "name": "WAN_LOCAL"
+                                        },
+                                        "out": {
+                                                "name": "WAN_OUT"
+                                        }
+                                },
+                                "mtu": "1500",
+                                "name-server": "none",
+                                "password": "Anker310597!",
+                                "server-ip": "waffenried.raedler.eu",
+                                "user-id": "Florian"
+                        }
+                }
+        },
+        "port-forward": {
+                "auto-firewall": "disable",
+                "hairpin-nat": "enable",
+                "lan-interface": [
+                        "eth1.2",
+                        "eth1.3",
+                        "eth1.4",
+                        "eth1.5",
+                        "eth1.80",
+                        "eth1",
+                        "eth1.6",
+                        "eth1.8",
+                        "eth1.9"
+                ],
+                "rule": {
+                        "3001": {
+                                "description": "Proxy",
+                                "forward-to": {
+                                        "address": "192.168.1.9"
+                                },
+                                "original-port": "443",
+                                "protocol": "tcp_udp"
+                        },
+                        "3002": {
+                                "description": "Proxy_80",
+                                "forward-to": {
+                                        "address": "192.168.1.9"
+                                },
+                                "original-port": "80",
+                                "protocol": "tcp_udp"
+                        },
+                        "3003": {
+                                "description": "RDP_Laptop",
+                                "forward-to": {
+                                        "address": "192.168.1.18"
+                                },
+                                "original-port": "3389",
+                                "protocol": "tcp_udp"
+                        },
+                        "3004": {
+                                "description": "SSH",
+                                "forward-to": {
+                                        "address": "192.168.6.7"
+                                },
+                                "original-port": "22",
+                                "protocol": "tcp_udp"
+                        },
+                        "3005": {
+                                "description": "TV_Stream",
+                                "forward-to": {
+                                        "address": "192.168.8.10"
+                                },
+                                "original-port": "8001",
+                                "protocol": "tcp_udp"
+                        }
+                },
+                "wan-interface": "pppoe2"
+        },
+        "protocols": {
+                "static": {
+                        "interface-route": {
+                                "0.0.0.0/0": {
+                                        "next-hop-interface": {
+                                                "pppoe2": {
+                                                        "distance": "1"
+                                                }
+                                        }
+                                },
+                                "1.0.0.0/30": {
+                                        "next-hop-interface": {
+                                                "pptpc0": {
+                                                        "distance": "5"
+                                                }
+                                        }
+                                },
+                                "192.168.2.0/24": {
+                                        "next-hop-interface": {
+                                                "pptpc1": {
+                                                        "distance": "50"
+                                                }
+                                        }
+                                }
+                        },
+                        "table": {
+                                "1": {
+                                        "interface-route": {
+                                                "0.0.0.0/0": {
+                                                        "next-hop-interface": {
+                                                                "pptpc0": "''"
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                }
+        },
+        "service": {
+                "dhcp-server": {
+                        "disabled": "false",
+                        "global-parameters": [
+                                "class &quot;denied&quot; { match substring (hardware, 1, 6); deny booting; } subclass &quot;denied&quot; fc:ec:da:02:31:24; subclass &quot;denied&quot; fc:ec:da:02:31:25; subclass &quot;denied&quot; fc:ec:da:02:31:26;"
+                        ],
+                        "hostfile-update": "enable",
+                        "shared-network-name": {
+                                "net_LAN_eth1_192.168.1.0-24": {
+                                        "authoritative": "enable",
+                                        "description": "vlan1",
+                                        "subnet": {
+                                                "192.168.1.0/24": {
+                                                        "default-router": "192.168.1.1",
+                                                        "dns-server": [
+                                                                "192.168.1.2",
+                                                                "1.1.1.1",
+                                                                "8.8.8.8"
+                                                        ],
+                                                        "domain-name": "raedler.eu",
+                                                        "lease": "86400",
+                                                        "start": {
+                                                                "192.168.1.6": {
+                                                                        "stop": "192.168.1.254"
+                                                                }
+                                                        },
+                                                        "static-mapping": {
+                                                                "00-0c-29-86-fe-a1": {
+                                                                        "host-record": "disable",
+                                                                        "ip-address": "192.168.1.4",
+                                                                        "mac-address": "00:0c:29:86:fe:a1"
+                                                                },
+                                                                "00-0c-29-ab-3f-76": {
+                                                                        "host-record": "disable",
+                                                                        "ip-address": "192.168.1.9",
+                                                                        "mac-address": "00:0c:29:ab:3f:76"
+                                                                },
+                                                                "00-0c-29-c5-37-6a": {
+                                                                        "host-record": "disable",
+                                                                        "ip-address": "192.168.1.11",
+                                                                        "mac-address": "00:0c:29:c5:37:6a"
+                                                                },
+                                                                "00-0c-29-dd-e9-59": {
+                                                                        "host-record": "disable",
+                                                                        "ip-address": "192.168.1.2",
+                                                                        "mac-address": "00:0c:29:dd:e9:59"
+                                                                },
+                                                                "00-11-32-c4-a7-3a": {
+                                                                        "host-record": "disable",
+                                                                        "ip-address": "192.168.1.6",
+                                                                        "mac-address": "00:11:32:c4:a7:3a"
+                                                                },
+                                                                "00-1e-a0-00-2f-fc": {
+                                                                        "host-record": "disable",
+                                                                        "ip-address": "192.168.1.20",
+                                                                        "mac-address": "00:1e:a0:00:2f:fc"
+                                                                },
+                                                                "00-1e-a0-00-5b-26": {
+                                                                        "host-record": "disable",
+                                                                        "ip-address": "192.168.1.22",
+                                                                        "mac-address": "00:1e:a0:00:5b:26"
+                                                                },
+                                                                "94-18-82-38-28-fe": {
+                                                                        "host-record": "disable",
+                                                                        "ip-address": "192.168.1.23",
+                                                                        "mac-address": "94:18:82:38:28:fe"
+                                                                },
+                                                                "9c-3d-cf-ff-db-22": {
+                                                                        "host-record": "disable",
+                                                                        "ip-address": "192.168.1.5",
+                                                                        "mac-address": "9c:3d:cf:ff:db:22"
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                },
+                                "net_VLAN2_eth1_192.168.22.0-24": {
+                                        "authoritative": "enable",
+                                        "description": "vlan2",
+                                        "subnet": {
+                                                "192.168.22.0/24": {
+                                                        "default-router": "192.168.22.1",
+                                                        "dns-server": [
+                                                                "192.168.1.2",
+                                                                "1.1.1.1"
+                                                        ],
+                                                        "lease": "86400",
+                                                        "start": {
+                                                                "192.168.22.6": {
+                                                                        "stop": "192.168.22.254"
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                },
+                                "net_VLAN3_eth1_192.168.3.0-24": {
+                                        "authoritative": "enable",
+                                        "description": "vlan3",
+                                        "subnet": {
+                                                "192.168.3.0/24": {
+                                                        "default-router": "192.168.3.1",
+                                                        "dns-server": [
+                                                                "192.168.1.2",
+                                                                "1.1.1.1"
+                                                        ],
+                                                        "lease": "86400",
+                                                        "start": {
+                                                                "192.168.3.6": {
+                                                                        "stop": "192.168.3.254"
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                },
+                                "net_VLAN4_eth1_192.168.4.0-24": {
+                                        "authoritative": "enable",
+                                        "description": "vlan4",
+                                        "subnet": {
+                                                "192.168.4.0/24": {
+                                                        "default-router": "192.168.4.1",
+                                                        "dns-server": [
+                                                                "192.168.1.2",
+                                                                "1.1.1.1"
+                                                        ],
+                                                        "lease": "86400",
+                                                        "start": {
+                                                                "192.168.4.6": {
+                                                                        "stop": "192.168.4.254"
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                },
+                                "net_VLAN5_eth1_192.168.5.0-24": {
+                                        "authoritative": "enable",
+                                        "description": "vlan5",
+                                        "subnet": {
+                                                "192.168.5.0/24": {
+                                                        "default-router": "192.168.5.1",
+                                                        "dns-server": [
+                                                                "192.168.1.2",
+                                                                "1.1.1.1"
+                                                        ],
+                                                        "lease": "86400",
+                                                        "start": {
+                                                                "192.168.5.6": {
+                                                                        "stop": "192.168.5.254"
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                },
+                                "net_VLAN9_eth1_192.168.9.0-24": {
+                                        "authoritative": "enable",
+                                        "description": "vlan9",
+                                        "subnet": {
+                                                "192.168.9.0/24": {
+                                                        "default-router": "192.168.9.1",
+                                                        "dns-server": [
+                                                                "192.168.1.2",
+                                                                "1.1.1.1"
+                                                        ],
+                                                        "lease": "86400",
+                                                        "start": {
+                                                                "192.168.9.6": {
+                                                                        "stop": "192.168.9.254"
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                },
+                                "net_VOICE_eth1_192.168.80.0-28": {
+                                        "authoritative": "enable",
+                                        "description": "vlan80",
+                                        "subnet": {
+                                                "192.168.80.0/28": {
+                                                        "default-router": "192.168.80.1",
+                                                        "dns-server": [
+                                                                "192.168.1.2",
+                                                                "1.1.1.1"
+                                                        ],
+                                                        "lease": "86400",
+                                                        "start": {
+                                                                "192.168.80.2": {
+                                                                        "stop": "192.168.80.14"
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                },
+                                "net_VPN_NETWORK_eth1_192.168.6.0-24": {
+                                        "authoritative": "enable",
+                                        "description": "vlan6",
+                                        "subnet": {
+                                                "192.168.6.0/24": {
+                                                        "default-router": "192.168.6.1",
+                                                        "dns-server": [
+                                                                "192.168.6.1"
+                                                        ],
+                                                        "lease": "86400",
+                                                        "start": {
+                                                                "192.168.6.6": {
+                                                                        "stop": "192.168.6.254"
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                },
+                                "net_WORK_DB_eth1_192.168.8.0-24": {
+                                        "authoritative": "enable",
+                                        "description": "vlan8",
+                                        "subnet": {
+                                                "192.168.8.0/24": {
+                                                        "default-router": "192.168.8.1",
+                                                        "dns-server": [
+                                                                "192.168.8.1"
+                                                        ],
+                                                        "lease": "86400",
+                                                        "start": {
+                                                                "192.168.8.6": {
+                                                                        "stop": "192.168.8.254"
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
+                        },
+                        "static-arp": "disable",
+                        "use-dnsmasq": "disable"
+                },
+                "dns": {
+                        "dynamic": {
+                                "interface": {
+                                        "pppoe2": {
+                                                "service": {
+                                                        "dyndns": {
+                                                                "host-name": [
+                                                                        "dyn.raedler.eu"
+                                                                ],
+                                                                "login": "kroisler",
+                                                                "password": "Anker310597!",
+                                                                "server": "dyndns.inwx.com"
+                                                        }
+                                                }
+                                        }
+                                }
+                        },
+                        "forwarding": {
+                                "cache-size": "10000",
+                                "except-interface": [
+                                        "pppoe2"
+                                ],
+                                "options": [
+                                        "all-servers",
+                                        "cname=unifi.raedler.eu,unifi",
+                                        "server=8.8.8.8",
+                                        "server=1.1.1.1",
+                                        "host-record=unifi,192.168.1.6"
+                                ]
+                        }
+                },
+                "gui": {
+                        "http-port": "80",
+                        "https-port": "443",
+                        "older-ciphers": "enable"
+                },
+                "lldp": {
+                        "interface": {
+                                "all": "''"
+                        }
+                },
+                "nat": {
+                        "rule": {
+                                "6001": {
+                                        "description": "MASQ corporate_network to WAN",
+                                        "log": "disable",
+                                        "outbound-interface": "pppoe2",
+                                        "protocol": "all",
+                                        "source": {
+                                                "group": {
+                                                        "network-group": "corporate_network"
+                                                }
+                                        },
+                                        "type": "masquerade"
+                                },
+                                "6002": {
+                                        "description": "MASQ remote_user_vpn_network to WAN",
+                                        "log": "disable",
+                                        "outbound-interface": "pppoe2",
+                                        "protocol": "all",
+                                        "source": {
+                                                "group": {
+                                                        "network-group": "remote_user_vpn_network"
+                                                }
+                                        },
+                                        "type": "masquerade"
+                                },
+                                "6003": {
+                                        "description": "MASQ guest_network to WAN",
+                                        "log": "disable",
+                                        "outbound-interface": "pppoe2",
+                                        "protocol": "all",
+                                        "source": {
+                                                "group": {
+                                                        "network-group": "guest_network"
+                                                }
+                                        },
+                                        "type": "masquerade"
+                                },
+                                "6004": {
+                                        "description": "MASQ corporate_network to VPN-PPTPc",
+                                        "log": "disable",
+                                        "outbound-interface": "pptpc1",
+                                        "protocol": "all",
+                                        "source": {
+                                                "group": {
+                                                        "network-group": "corporate_network"
+                                                }
+                                        },
+                                        "type": "masquerade"
+                                },
+                                "6005": {
+                                        "description": "MASQ remote_user_vpn_network to VPN-PPTPc",
+                                        "log": "disable",
+                                        "outbound-interface": "pptpc1",
+                                        "protocol": "all",
+                                        "source": {
+                                                "group": {
+                                                        "network-group": "remote_user_vpn_network"
+                                                }
+                                        },
+                                        "type": "masquerade"
+                                },
+                                "6006": {
+                                        "description": "MASQ corporate_network to VPN-PPTPc",
+                                        "log": "disable",
+                                        "outbound-interface": "pptpc0",
+                                        "protocol": "all",
+                                        "source": {
+                                                "group": {
+                                                        "network-group": "corporate_network"
+                                                }
+                                        },
+                                        "type": "masquerade"
+                                },
+                                "6007": {
+                                        "description": "MASQ remote_user_vpn_network to VPN-PPTPc",
+                                        "log": "disable",
+                                        "outbound-interface": "pptpc0",
+                                        "protocol": "all",
+                                        "source": {
+                                                "group": {
+                                                        "network-group": "remote_user_vpn_network"
+                                                }
+                                        },
+                                        "type": "masquerade"
+                                }
+                        }
+                },
+                "radius-server": {
+                        "acct-port": "1813",
+                        "auth-port": "1812",
+                        "client": {
+                                "client-5e78e7da6f1e2131c7572e42": {
+                                        "ip-address": "192.168.1.1",
+                                        "netmask": "24",
+                                        "secret": "Anker310597!"
+                                },
+                                "client-5e78f31b6f1e2131c7572eb0": {
+                                        "ip-address": "192.168.8.1",
+                                        "netmask": "24",
+                                        "secret": "Anker310597!"
+                                },
+                                "client-5e8239806f1e2102cac6e880": {
+                                        "ip-address": "192.168.6.1",
+                                        "netmask": "24",
+                                        "secret": "Anker310597!"
+                                },
+                                "client-5e82577c6f1e2102cac6f999": {
+                                        "ip-address": "192.168.22.1",
+                                        "netmask": "24",
+                                        "secret": "Anker310597!"
+                                },
+                                "client-5e8257926f1e2102cac6f99b": {
+                                        "ip-address": "192.168.3.1",
+                                        "netmask": "24",
+                                        "secret": "Anker310597!"
+                                },
+                                "client-5e8257ae6f1e2102cac6f99d": {
+                                        "ip-address": "192.168.4.1",
+                                        "netmask": "24",
+                                        "secret": "Anker310597!"
+                                },
+                                "client-5e8257cc6f1e2102cac6f99f": {
+                                        "ip-address": "192.168.5.1",
+                                        "netmask": "24",
+                                        "secret": "Anker310597!"
+                                },
+                                "client-5e8257f56f1e2102cac6f9a5": {
+                                        "ip-address": "192.168.9.1",
+                                        "netmask": "24",
+                                        "secret": "Anker310597!"
+                                },
+                                "client-5e8344da6f1e2102cac7d3ae": {
+                                        "ip-address": "192.168.80.1",
+                                        "netmask": "28",
+                                        "secret": "Anker310597!"
+                                }
+                        },
+                        "enable": "''",
+                        "interim-update-interval": "3600",
+                        "tunneled-reply": "''",
+                        "user": {
+                                "Florian": {
+                                        "encoded-password": "''",
+                                        "password": "QW5rZXIzMTA1OTch"
+                                },
+                                "Florian1": {
+                                        "encoded-password": "''",
+                                        "password": "QW5rZXIzMTA1OTch",
+                                        "tunnel-param": "3 1"
+                                }
+                        }
+                },
+                "ssh": {
+                        "port": "22",
+                        "protocol-version": "v2"
+                }
+        },
+        "system": {
+                "conntrack": {
+                        "expect-table-size": "2048",
+                        "hash-size": "32768",
+                        "modules": {
+                                "sip": {
+                                        "disable": "''"
+                                }
+                        },
+                        "table-size": "262144",
+                        "timeout": {
+                                "icmp": "30",
+                                "other": "600",
+                                "tcp": {
+                                        "close": "10",
+                                        "close-wait": "60",
+                                        "established": "7440",
+                                        "fin-wait": "120",
+                                        "last-ack": "30",
+                                        "syn-recv": "60",
+                                        "syn-sent": "120",
+                                        "time-wait": "120"
+                                },
+                                "udp": {
+                                        "other": "30",
+                                        "stream": "180"
+                                }
+                        }
+                },
+                "domain-name": "raedler.eu",
+                "host-name": "ubnt",
+                "ip": {
+                        "override-hostname-ip": "192.168.1.1"
+                },
+                "login": {
+                        "user": {
+                                "Admin": {
+                                        "authentication": {
+                                                "encrypted-password": "$6$Q10tMh9x$O1sNAPBolJMNACbSQKhm.IjvASlgaji1KpxrsYWfOF1PHDNLOgsK1RnQZHbJuIgmJpA0Sx2B3DMAVUw/Wwnx41"
+                                        },
+                                        "level": "admin"
+                                }
+                        }
+                },
+                "name-server": [
+                        "127.0.0.1"
+                ],
+                "ntp": {
+                        "server": {
+                                "0.ubnt.pool.ntp.org": "''",
+                                "1.ubnt.pool.ntp.org": "''",
+                                "2.ubnt.pool.ntp.org": "''",
+                                "3.ubnt.pool.ntp.org": "''"
+                        }
+                },
+                "offload": {
+                        "ipsec": "enable",
+                        "ipv4": {
+                                "forwarding": "enable",
+                                "gre": "enable",
+                                "pppoe": "enable",
+                                "vlan": "enable"
+                        },
+                        "ipv6": {
+                                "forwarding": "enable",
+                                "vlan": "enable"
+                        }
+                },
+                "static-host-mapping": {
+                        "host-name": {
+                                "setup.ubnt.com": {
+                                        "alias": [
+                                                "setup"
+                                        ],
+                                        "inet": [
+                                                "192.168.1.1"
+                                        ]
+                                }
+                        }
+                },
+                "syslog": {
+                        "global": {
+                                "facility": {
+                                        "all": {
+                                                "level": "notice"
+                                        },
+                                        "protocols": {
+                                                "level": "debug"
+                                        }
+                                }
+                        }
+                },
+                "time-zone": "Europe/Berlin",
+                "traffic-analysis": {
+                        "dpi": "enable",
+                        "export": "disable"
+                }
+        },
+        "vpn": {
+                "ipsec": {
+                        "auto-firewall-nat-exclude": "disable",
+                        "ipsec-interfaces": {
+                                "interface": [
+                                        "pppoe2"
+                                ]
+                        },
+                        "nat-networks": {
+                                "allowed-network": {
+                                        "0.0.0.0/0": "''"
+                                }
+                        },
+                        "nat-traversal": "enable"
+                },
+                "l2tp": {
+                        "remote-access": {
+                                "authentication": {
+                                        "mode": "radius",
+                                        "radius-server": {
+                                                "192.168.1.1": {
+                                                        "key": "Anker310597!",
+                                                        "port": "1812"
+                                                }
+                                        },
+                                        "require": "mschap-v2"
+                                },
+                                "client-ip-pool": {
+                                        "start": "192.168.99.1",
+                                        "stop": "192.168.99.254"
+                                },
+                                "dns-servers": {
+                                        "server-1": "192.168.1.1"
+                                },
+                                "idle": "1800",
+                                "ipsec-settings": {
+                                        "authentication": {
+                                                "mode": "pre-shared-secret",
+                                                "pre-shared-secret": "Anker310597!"
+                                        },
+                                        "ike-lifetime": "3600",
+                                        "lifetime": "3600"
+                                },
+                                "outside-address": "0.0.0.0"
+                        }
+                }
+        }
+}
